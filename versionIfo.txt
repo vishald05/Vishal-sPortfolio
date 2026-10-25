@@ -1,1 +1,2 @@
-V1 = Simple Single page layout only resume content
+V1      = Simple Single page layout only resume content
+V1.1    = Migrated entire codebase to React 
