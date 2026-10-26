@@ -2,3 +2,4 @@ V1      = Simple Single page layout only resume content
 V1.1    = Migrated entire codebase to React 
 V1.2    = Made it more portfolio focused
 V1.2.1  = Added scrolling Floating stack
+V1.3    = Added Detailed Project Page

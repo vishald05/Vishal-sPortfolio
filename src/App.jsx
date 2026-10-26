@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SiCss,
   SiDocker,
@@ -16,6 +16,8 @@ import {
   SiReact,
 } from "react-icons/si";
 import LogoLoop from "./components/LogoLoop";
+import CaseStudyPage from "./components/CaseStudyPage";
+import { projects } from "./data/projects";
 
 const email = "visher0528@gmail.com";
 const github = "https://github.com/vishald05";
@@ -40,65 +42,22 @@ const technologyLogos = [
   node: <Icon aria-hidden="true" style={{ color }} />,
 }));
 
-const projects = [
-  {
-    title: "WordTrap",
-    category: "01 / multiplayer",
-    className: "visual-wordtrap",
-    description:
-      "A real-time social deduction game where the room is lively, the votes are tense, and somebody is definitely lying.",
-    tags: ["Node.js", "Socket.IO", "Express"],
-    demo: "https://whoislyingfrontend.onrender.com/",
-    featured: true,
-    visual: <div className="wordtrap-screen"><span>WHO'S</span><strong>LYING?</strong><small>waiting for players...</small></div>,
-  },
-  {
-    title: "Budget Tracker",
-    category: "02 / finance",
-    className: "visual-budget",
-    description:
-      "A finance companion for tracking spending, visualizing habits, and asking an AI chatbot the questions a spreadsheet cannot.",
-    tags: ["JavaScript", "MongoDB", "AI"],
-    demo: "https://budgettracker-pubj.onrender.com",
-    visual: <><div className="budget-chart"><span /><span /><span /><span /><span /></div><b>₹ 24,850</b><small>this month's overview</small></>,
-  },
-  {
-    title: "MatchMoji",
-    category: "03 / playful",
-    className: "visual-match",
-    description:
-      "A memory game built around tiny moments of delight, clean component logic, and one custom hook doing the heavy lifting.",
-    tags: ["React 19", "Vite", "CSS"],
-    demo: "https://matchmoji.onrender.com",
-    visual: <div className="emoji-grid"><i>✦</i><i>☾</i><i>✿</i><i>☾</i><i>✦</i><i>✿</i></div>,
-  },
-  {
-    title: "Customer Shopping Analytics",
-    category: "04 / insight",
-    className: "visual-data",
-    description:
-      "Turning raw retail transactions into clear customer segments, loyalty patterns, and decisions people can actually act on.",
-    tags: ["Python", "Pandas", "MySQL", "Power BI"],
-    wide: true,
-    visual: <><div className="data-lines"><span /><span /><span /><span /></div><div className="data-pie" /></>,
-  },
-];
-
 function ExternalLink({ href, children, secondary = false }) {
   return <a className={`project-action ${secondary ? "project-action-secondary" : ""}`} href={href} target="_blank" rel="noreferrer">{children} <span aria-hidden="true">↗</span></a>;
 }
 
 function Header({ menuOpen, setMenuOpen }) {
   const closeMenu = () => setMenuOpen(false);
+  const homePrefix = window.location.pathname === "/" ? "" : "/";
   return <header className="site-header">
-    <a className="brand" href="#top" aria-label="Vishal D home"><span className="brand-mark">V</span><span>Vishal D.</span></a>
+    <a className="brand" href={`${homePrefix}#top`} aria-label="Vishal D home"><span className="brand-mark">V</span><span>Vishal D.</span></a>
     <button className="menu-toggle" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen(!menuOpen)}>
       <span className="sr-only">Toggle navigation</span><span /><span />
     </button>
     <nav id="site-nav" className={`site-nav ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
-      <a href="#work" onClick={closeMenu}>Projects</a>
-      <a href="#about" onClick={closeMenu}>About</a>
-      <a href="#skills" onClick={closeMenu}>Toolkit</a>
+      <a href={`${homePrefix}#work`} onClick={closeMenu}>Projects</a>
+      <a href={`${homePrefix}#about`} onClick={closeMenu}>About</a>
+      <a href={`${homePrefix}#skills`} onClick={closeMenu}>Toolkit</a>
       <a className="nav-contact" href={`mailto:${email}`}>Email me <span>↗</span></a>
     </nav>
   </header>;
@@ -117,63 +76,97 @@ function HeroArt() {
 }
 
 function ProjectCard({ project }) {
-  return <article className={`project-card ${project.featured ? "project-featured" : ""} ${project.wide ? "project-wide" : ""}`}>
-    <div className={`project-visual ${project.className}`}><span className="visual-label">{project.category}</span>{project.visual}</div>
-    <div className="project-info">
-      <div className="project-title-row"><h3>{project.title}</h3><span className="project-type">project</span></div>
-      <p>{project.description}</p>
-      <div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-      <div className="project-actions">
-        {project.demo && <ExternalLink href={project.demo}>Live Demo</ExternalLink>}
-        <span className="source-unavailable">Source link not added</span>
+  return <article className={`project-card ${project.wide ? "project-wide" : ""}`}>
+    <a className="project-card-main" href={`/projects/${project.slug}`}>
+      <div className={`project-visual ${project.className}`}><span className="visual-label">{project.cardCategory}</span>
+        {project.visual === "wordtrap" && <div className="wordtrap-screen"><span>WHO'S</span><strong>LYING?</strong><small>waiting for players...</small></div>}
+        {project.visual === "budget" && <><div className="budget-chart"><span /><span /><span /><span /><span /></div><b>₹ 24,850</b><small>this month's overview</small></>}
+        {project.visual === "match" && <div className="emoji-grid"><i>✦</i><i>☾</i><i>✿</i><i>☾</i><i>✦</i><i>✿</i></div>}
+        {project.visual === "tree" && <><div className="data-lines"><span /><span /><span /><span /></div><div className="data-pie" /></>}
       </div>
+      <div className="project-info">
+        <div className="project-title-row"><h3>{project.title}</h3><span className="project-type">case study ↗</span></div>
+        <p>{project.description}</p>
+        <div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+      </div>
+    </a>
+    <div className="project-actions">
+      {project.demo && <ExternalLink href={project.demo}>Live Demo</ExternalLink>}
     </div>
   </article>;
 }
 
+function usePortfolioRoute() {
+  const [route, setRoute] = useState(window.location.pathname);
+  useEffect(() => {
+    const handlePopState = () => setRoute(window.location.pathname);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+  return route;
+}
+
+function PortfolioPage() {
+  return <main id="top">
+    <section className="hero section-shell" aria-labelledby="hero-title">
+      <div className="hero-copy">
+        <p className="eyebrow">Personal portfolio · 2026</p>
+        <h1 id="hero-title">Hi, I'm <em>Vishal D.</em></h1>
+        <p className="hero-role">Computer Science Student <span>·</span> Software Developer</p>
+        <p className="hero-intro">I build web applications, solve problems, experiment with technology, and occasionally turn a small idea into a much bigger project than planned.</p>
+        <div className="hero-actions">
+          <a className="button button-primary" href="#work">Explore my projects <span>↓</span></a>
+          <a className="button button-outline" href={github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+          <span className="resume-note">Resume not available yet</span>
+        </div>
+        <div className="hero-meta"><span>Chennai, India</span><span className="meta-rule" /><span>CS undergrad · 2023—27</span></div>
+      </div>
+      <HeroArt />
+    </section>
+
+    <section id="work" className="work section-band" aria-labelledby="work-title">
+      <div className="section-shell">
+        <div className="section-heading"><p className="eyebrow">What I've built <span className="heading-line" /></p><h2 id="work-title">Projects with a point<br /><em>and a little personality.</em></h2><p className="section-note">Different stacks, same goal: make something that earns its place.</p></div>
+        <div className="project-grid">{projects.map((project) => <ProjectCard key={project.slug} project={project} />)}</div>
+      </div>
+    </section>
+
+    <section id="about" className="journey section-shell" aria-labelledby="about-title">
+      <div className="journey-copy"><p className="eyebrow">A little about me <span className="heading-line" /></p><h2 id="about-title">More than just<br /><em>shipping features.</em></h2><p>I care about the why behind the build — the person using it, the teammate beside me, and the weird little detail that makes a product feel considered. I like learning in public, picking up unfamiliar tools, and seeing how far a small idea can go.</p><a className="text-link" href={github} target="_blank" rel="noreferrer">Visit my GitHub <span>↗</span></a></div>
+      <div className="milestones" aria-label="Achievements">
+        <div className="milestone"><strong>Top 4%</strong><span>LeetCode globally<br />1915 contest rating · 1000+ problems</span></div>
+        <div className="milestone"><strong>Top 5</strong><span>NASSCOM Hackathon<br />Pre-Placement Offer for Reparo</span></div>
+        <div className="milestone"><strong>8.67</strong><span>Current CGPA<br />Chennai Institute of Technology</span></div>
+      </div>
+    </section>
+
+    <section id="skills" className="toolkit section-band" aria-labelledby="skills-title"><div className="section-shell toolkit-inner"><div className="section-heading"><p className="eyebrow">The toolkit <span className="heading-line" /></p><h2 id="skills-title">Curious by default,<br /><em>specific when it matters.</em></h2></div><div className="skill-list">
+      <div><span>01</span><b>Languages</b><p>Java · Python · JavaScript · SQL · HTML · CSS</p></div><div><span>02</span><b>Build with</b><p>React · Node.js · Express · Socket.IO · REST APIs</p></div><div><span>03</span><b>Data & AI</b><p>NumPy · Pandas · Matplotlib · Power BI · LLMs</p></div><div><span>04</span><b>Foundations</b><p>DSA · OOP · OS · Networks · DBMS · Cloud</p></div>
+    </div><div className="skills-loop"><LogoLoop logos={technologyLogos} speed={52} direction="left" gap={28} pauseOnHover fadeOut={false} scaleOnHover ariaLabel="Technologies I use" /></div></div></section>
+
+    <section className="contact"><div className="section-shell contact-inner"><p className="eyebrow">Have a good problem?</p><h2>Let's make it<br /><em>less hypothetical.</em></h2><a className="button button-light" href={`mailto:${email}`}>Email me at <strong>{email}</strong> <span>↗</span></a></div></section>
+  </main>;
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const route = usePortfolioRoute();
+  const slug = route.startsWith("/projects/") ? route.slice("/projects/".length).replace(/\/$/, "") : "";
+  const project = projects.find((item) => item.slug === slug);
+  const isProjectRoute = route.startsWith("/projects/");
+  const navigateHome = (event) => {
+    event.preventDefault();
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.scrollTo(0, 0);
+  };
   return <>
     <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-    <main id="top">
-      <section className="hero section-shell" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <p className="eyebrow">Personal portfolio · 2026</p>
-          <h1 id="hero-title">Hi, I'm <em>Vishal D.</em></h1>
-          <p className="hero-role">Computer Science Student <span>·</span> Software Developer</p>
-          <p className="hero-intro">I build web applications, solve problems, experiment with technology, and occasionally turn a small idea into a much bigger project than planned.</p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#work">Explore my projects <span>↓</span></a>
-            <a className="button button-outline" href={github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
-            <span className="resume-note">Resume not available yet</span>
-          </div>
-          <div className="hero-meta"><span>Chennai, India</span><span className="meta-rule" /><span>CS undergrad · 2023—27</span></div>
-        </div>
-        <HeroArt />
-      </section>
-
-      <section id="work" className="work section-band" aria-labelledby="work-title">
-        <div className="section-shell">
-          <div className="section-heading"><p className="eyebrow">What I've built <span className="heading-line" /></p><h2 id="work-title">Projects with a point<br /><em>and a little personality.</em></h2><p className="section-note">Different stacks, same goal: make something that earns its place.</p></div>
-          <div className="project-grid">{projects.map((project) => <ProjectCard key={project.title} project={project} />)}</div>
-        </div>
-      </section>
-
-      <section id="about" className="journey section-shell" aria-labelledby="about-title">
-        <div className="journey-copy"><p className="eyebrow">A little about me <span className="heading-line" /></p><h2 id="about-title">More than just<br /><em>shipping features.</em></h2><p>I care about the why behind the build — the person using it, the teammate beside me, and the weird little detail that makes a product feel considered. I like learning in public, picking up unfamiliar tools, and seeing how far a small idea can go.</p><a className="text-link" href={github} target="_blank" rel="noreferrer">Visit my GitHub <span>↗</span></a></div>
-        <div className="milestones" aria-label="Achievements">
-          <div className="milestone"><strong>Top 4%</strong><span>LeetCode globally<br />1915 contest rating · 1000+ problems</span></div>
-          <div className="milestone"><strong>Top 5</strong><span>NASSCOM Hackathon<br />Pre-Placement Offer for Reparo</span></div>
-          <div className="milestone"><strong>8.67</strong><span>Current CGPA<br />Chennai Institute of Technology</span></div>
-        </div>
-      </section>
-
-      <section id="skills" className="toolkit section-band" aria-labelledby="skills-title"><div className="section-shell toolkit-inner"><div className="section-heading"><p className="eyebrow">The toolkit <span className="heading-line" /></p><h2 id="skills-title">Curious by default,<br /><em>specific when it matters.</em></h2></div><div className="skill-list">
-        <div><span>01</span><b>Languages</b><p>Java · Python · JavaScript · SQL · HTML · CSS</p></div><div><span>02</span><b>Build with</b><p>React · Node.js · Express · Socket.IO · REST APIs</p></div><div><span>03</span><b>Data & AI</b><p>NumPy · Pandas · Matplotlib · Power BI · LLMs</p></div><div><span>04</span><b>Foundations</b><p>DSA · OOP · OS · Networks · DBMS · Cloud</p></div>
-      </div><div className="skills-loop"><LogoLoop logos={technologyLogos} speed={52} direction="left" gap={28} pauseOnHover fadeOut={false} scaleOnHover ariaLabel="Technologies I use" /></div></div></section>
-
-      <section className="contact"><div className="section-shell contact-inner"><p className="eyebrow">Have a good problem?</p><h2>Let's make it<br /><em>less hypothetical.</em></h2><a className="button button-light" href={`mailto:${email}`}>Email me at <strong>{email}</strong> <span>↗</span></a></div></section>
-    </main>
+    {isProjectRoute
+      ? project
+        ? <CaseStudyPage project={project} onBack={navigateHome} />
+        : <main className="not-found"><div className="section-shell"><p className="eyebrow">404 / missing project</p><h1>This case study hasn't been written yet.</h1><a className="button button-primary" href="/" onClick={navigateHome}>Back to projects</a></div></main>
+      : <PortfolioPage />}
     <footer className="site-footer section-shell"><span>© {new Date().getFullYear()} Vishal D.</span><span>Designed & built with questionable commits.</span><div><a href={`mailto:${email}`}>{email}</a><a href={github} target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/vishal-d-7ba16b292" target="_blank" rel="noreferrer">LinkedIn ↗</a></div></footer>
   </>;
 }
