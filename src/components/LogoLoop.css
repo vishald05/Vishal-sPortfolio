@@ -1,0 +1,97 @@
+.logoloop {
+  --logoloop-gap: 32px;
+  --logoloop-duration: 24s;
+  --logoloop-fade: transparent;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  overflow: clip;
+  padding: 17px 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.logoloop--fade {
+  -webkit-mask-image: linear-gradient(90deg, var(--logoloop-fade), #000 8%, #000 92%, var(--logoloop-fade));
+  mask-image: linear-gradient(90deg, var(--logoloop-fade), #000 8%, #000 92%, var(--logoloop-fade));
+}
+
+.logoloop__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: logoloop-scroll var(--logoloop-duration) linear infinite;
+}
+
+.logoloop--pause-hover:hover .logoloop__track,
+.logoloop--pause-hover:focus-within .logoloop__track {
+  animation-play-state: paused;
+}
+
+.logoloop__list {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: var(--logoloop-gap);
+  margin: 0;
+  padding: 0 var(--logoloop-gap) 0 0;
+  list-style: none;
+}
+
+.logoloop__item {
+  flex: 0 0 auto;
+}
+
+.logoloop__content {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .25s ease, transform .25s ease, opacity .25s ease;
+}
+
+.logoloop__content:focus-visible {
+  outline: 2px solid var(--button);
+  outline-offset: 5px;
+}
+
+.logoloop__node {
+  display: inline-flex;
+  align-items: center;
+  color: var(--logo-color, var(--button));
+  font-size: 27px;
+  line-height: 1;
+}
+
+.logoloop__label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.logoloop--scale-hover .logoloop__item:hover .logoloop__content {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.logoloop__item:hover .logoloop__label,
+.logoloop__item:focus-within .logoloop__label {
+  color: var(--ink);
+}
+
+@keyframes logoloop-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoloop__track {
+    animation: none;
+  }
+
+  .logoloop__content {
+    transition: none;
+  }
+}

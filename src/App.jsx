@@ -1,7 +1,44 @@
 import { useState } from "react";
+import {
+  SiCss,
+  SiDocker,
+  SiExpress,
+  SiGit,
+  SiGithub,
+  SiHtml5,
+  SiJavascript,
+  SiMongodb,
+  SiMysql,
+  SiNodedotjs,
+  SiOpenjdk,
+  SiPandas,
+  SiPython,
+  SiReact,
+} from "react-icons/si";
+import LogoLoop from "./components/LogoLoop";
 
 const email = "visher0528@gmail.com";
 const github = "https://github.com/vishald05";
+
+const technologyLogos = [
+  ["Java", SiOpenjdk, "#5382a1"],
+  ["Python", SiPython, "#3776ab"],
+  ["JavaScript", SiJavascript, "#b08d00"],
+  ["React", SiReact, "#149eca"],
+  ["Node.js", SiNodedotjs, "#5fa04e"],
+  ["Express", SiExpress, "#49365e"],
+  ["HTML5", SiHtml5, "#e34f26"],
+  ["CSS3", SiCss, "#1572b6"],
+  ["MySQL", SiMysql, "#4479a1"],
+  ["MongoDB", SiMongodb, "#47a248"],
+  ["Git", SiGit, "#f05032"],
+  ["GitHub", SiGithub, "#49365e"],
+  ["Docker", SiDocker, "#2496ed"],
+  ["Pandas", SiPandas, "#130754"],
+].map(([title, Icon, color]) => ({
+  title,
+  node: <Icon aria-hidden="true" style={{ color }} />,
+}));
 
 const projects = [
   {
@@ -133,7 +170,7 @@ function App() {
 
       <section id="skills" className="toolkit section-band" aria-labelledby="skills-title"><div className="section-shell toolkit-inner"><div className="section-heading"><p className="eyebrow">The toolkit <span className="heading-line" /></p><h2 id="skills-title">Curious by default,<br /><em>specific when it matters.</em></h2></div><div className="skill-list">
         <div><span>01</span><b>Languages</b><p>Java · Python · JavaScript · SQL · HTML · CSS</p></div><div><span>02</span><b>Build with</b><p>React · Node.js · Express · Socket.IO · REST APIs</p></div><div><span>03</span><b>Data & AI</b><p>NumPy · Pandas · Matplotlib · Power BI · LLMs</p></div><div><span>04</span><b>Foundations</b><p>DSA · OOP · OS · Networks · DBMS · Cloud</p></div>
-      </div></div></section>
+      </div><div className="skills-loop"><LogoLoop logos={technologyLogos} speed={52} direction="left" gap={28} pauseOnHover fadeOut={false} scaleOnHover ariaLabel="Technologies I use" /></div></div></section>
 
       <section className="contact"><div className="section-shell contact-inner"><p className="eyebrow">Have a good problem?</p><h2>Let's make it<br /><em>less hypothetical.</em></h2><a className="button button-light" href={`mailto:${email}`}>Email me at <strong>{email}</strong> <span>↗</span></a></div></section>
     </main>
