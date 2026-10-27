@@ -151,9 +151,12 @@ function PortfolioPage() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const route = usePortfolioRoute();
-  const slug = route.startsWith("/projects/") ? route.slice("/projects/".length).replace(/\/$/, "") : "";
+  const projectPath = route.startsWith("/projects/")
+    ? route.slice("/projects/".length)
+    : route.slice(1);
+  const slug = projectPath.replace(/\/$/, "");
   const project = projects.find((item) => item.slug === slug);
-  const isProjectRoute = route.startsWith("/projects/");
+  const isProjectRoute = route.startsWith("/projects/") || Boolean(project);
   const navigateHome = (event) => {
     event.preventDefault();
     window.history.pushState({}, "", "/");
