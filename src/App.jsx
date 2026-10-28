@@ -205,7 +205,7 @@ function PortfolioPage() {
         <div className="hero-actions">
           <a className="button button-primary" href="#work">Explore my projects <span>↓</span></a>
           <a className="button button-outline" href={github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
-          <span className="resume-note">Resume not available yet</span>
+          <a className="resume-note" href="https://drive.google.com/file/d/1qg07Biv9aVPDorvYwdbO0i-LLtP1lehE/view?usp=sharing" target="_blank" rel="noreferrer">View resume <span>↗</span></a>
         </div>
         <div className="hero-meta"><span>Chennai, India</span><span className="meta-rule" /><span>CS undergrad · 2023—27</span></div>
         </div>
