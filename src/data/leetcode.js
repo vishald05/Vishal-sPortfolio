@@ -24,6 +24,7 @@ export function buildLeetCardUrl(type = "stats") {
   if (type === "contest") {
     params.set("ext", "contest");
     params.set("hide_title", "true");
+    params.set("hide", "ranking,total-solved,total-solved-text,solved,easy-solved,medium-solved,hard-solved");
     return `${baseUrl}?${params.toString()}`;
   }
 

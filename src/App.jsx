@@ -168,20 +168,15 @@ function DeveloperStatsSection() {
       </div>
     </div>
   
-    <div className="stats-grid stats-grid-image">
+    {/* <div className="stats-grid stats-grid-image"> */}
       {/* <div className="stats-image-card">
         <div className="stats-image-header">
           <span className="stats-tagline">Problem summary</span>
         </div>
         <LeetCodeCard src={statsUrl} alt="LeetCode statistics summary for Vishal0528" title="Problem summary" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
       </div> */}
-      <div className="stats-image-card">
-        <div className="stats-image-header">
-          <span className="stats-tagline">Contest rating</span>
-        </div>
-        <LeetCodeCard src={contestUrl} alt="LeetCode contest summary for Vishal0528" title="Contest rating" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
-      </div>
-    </div>
+    
+    {/* </div> */}
 
     <div className="stats-heatmap-wrap">
       <div className="stats-heatmap-header">
@@ -193,6 +188,12 @@ function DeveloperStatsSection() {
       </div>
       <LeetCodeCard src={heatmapUrl} alt="LeetCode activity heatmap for Vishal0528" title="Submission heatmap" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
     </div>
+      <div className="stats-image-card">
+        <div className="stats-image-header">
+          <span className="stats-tagline">Contest rating</span>
+        </div>
+        <LeetCodeCard src={contestUrl} alt="LeetCode contest summary for Vishal0528" title="Contest rating" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
+      </div>
   </section>;
 }
 
