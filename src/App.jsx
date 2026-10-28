@@ -20,10 +20,7 @@ import CaseStudyPage from "./components/CaseStudyPage";
 import {
   LEETCODE_PROFILE_URL,
   LEETCODE_USERNAME,
-  fetchLeetCodeData,
-  formatDateTime,
-  formatNumber,
-  getCachedLeetCodeData,
+  buildLeetCardUrl,
 } from "./data/leetcode";
 import { projects } from "./data/projects";
 
@@ -122,129 +119,41 @@ function MetricCard({ label, value, highlight = false, muted = false, note = nul
   </div>;
 }
 
-function DeveloperStatsSection() {
-  const [stats, setStats] = useState(null);
+function LeetCodeCard({ src, alt, title, onRetry, reloadKey }) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [usingCachedData, setUsingCachedData] = useState(false);
-  const [retryKey, setRetryKey] = useState(0);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    let ignore = false;
-    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+  }, [src, reloadKey]);
 
-    const loadStats = async () => {
-      const cachedStats = getCachedLeetCodeData();
-      if (cachedStats && !ignore) {
-        setStats(cachedStats);
-        setUsingCachedData(true);
-        setLoading(false);
-      }
-
-      try {
-        const liveStats = await fetchLeetCodeData(controller.signal);
-        if (!ignore) {
-          setStats(liveStats);
-          setError("");
-          setUsingCachedData(false);
-          setLoading(false);
-        }
-      } catch (requestError) {
-        if (ignore) {
-          return;
-        }
-
-        if (cachedStats) {
-          setStats(cachedStats);
-          setError("Live LeetCode data is temporarily unavailable. Showing the latest cached snapshot.");
-          setUsingCachedData(true);
-          setLoading(false);
-          return;
-        }
-
-        setStats(null);
-        setLoading(false);
-        setUsingCachedData(false);
-        setError("LeetCode statistics could not be loaded right now. Please try again or visit the profile directly.");
-      }
-    };
-
-    loadStats();
-    return () => {
-      ignore = true;
-      controller.abort();
-    };
-  }, [retryKey]);
-
-  const heatmapDays = stats?.submissionCalendar?.days ?? [];
-  const heatmapMax = stats?.submissionCalendar?.maxCount ?? 0;
-  const weeks = [];
-
-  for (let index = 0; index < heatmapDays.length; index += 7) {
-    weeks.push(heatmapDays.slice(index, index + 7));
+  if (error) {
+    return <div className="stats-card-fallback" role="alert">
+      <p>{title} could not be loaded right now.</p>
+      {onRetry && <button type="button" className="button button-primary" onClick={onRetry}>Reload</button>}
+      <a className="button button-outline" href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">Open profile <span>↗</span></a>
+    </div>;
   }
 
-  const monthLabels = [];
-  weeks.forEach((week, weekIndex) => {
-    const firstDay = week.find((day) => day?.date);
-    if (!firstDay) {
-      return;
-    }
+  return <div className="stats-card-frame">
+    {loading && <div className="stats-skeleton heatmap" aria-hidden="true" />}
+    <img
+      key={reloadKey}
+      src={src}
+      alt={alt}
+      className={loading ? "stats-card-image hidden" : "stats-card-image"}
+      onLoad={() => setLoading(false)}
+      onError={() => setError(true)}
+    />
+  </div>;
+}
 
-    const monthName = new Date(`${firstDay.date}T00:00:00`).toLocaleString("en-US", { month: "short" });
-    if (monthLabels.length === 0 || monthLabels[monthLabels.length - 1].month !== monthName) {
-      monthLabels.push({ month: monthName, weekIndex });
-    }
-  });
-
-  const renderHeatmap = () => {
-    if (!heatmapDays.length) {
-      return <div className="stats-empty-state"><p>No submission activity is available for the selected time range.</p><a href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">Open profile ↗</a></div>;
-    }
-
-    return <div className="heatmap-panel">
-      <div className="heatmap-legend" aria-label="Activity intensity legend">
-        <span>Less</span>
-        <div className="heatmap-legend-scale">
-          <i className="heatmap-cell level-0" aria-hidden="true" />
-          <i className="heatmap-cell level-1" aria-hidden="true" />
-          <i className="heatmap-cell level-2" aria-hidden="true" />
-          <i className="heatmap-cell level-3" aria-hidden="true" />
-          <i className="heatmap-cell level-4" aria-hidden="true" />
-        </div>
-        <span>More</span>
-      </div>
-
-      <div className="heatmap-shell" aria-label="LeetCode submission activity heatmap">
-        <div className="heatmap-months" style={{ gridTemplateColumns: `repeat(${weeks.length}, minmax(12px, 1fr))` }}>
-          {monthLabels.map(({ month, weekIndex }) => <span key={`${month}-${weekIndex}`} style={{ gridColumn: `${weekIndex + 1}` }}>{month}</span>)}
-        </div>
-        <div className="heatmap-content">
-          <div className="heatmap-weekdays" aria-hidden="true">
-            <span>Mon</span>
-            <span>Wed</span>
-            <span>Fri</span>
-          </div>
-          <div className="heatmap-grid" style={{ gridTemplateColumns: `repeat(${weeks.length}, minmax(12px, 1fr))` }}>
-            {weeks.flatMap((week, weekIndex) => week.map((day, dayIndex) => {
-              const intensity = day?.count === 0 ? 0 : Math.min(4, Math.max(1, Math.ceil((day.count / (heatmapMax || 1)) * 4)));
-              const heatClass = day?.isMissing ? "heatmap-cell heatmap-missing" : `heatmap-cell level-${intensity}`;
-              const cellTitle = day?.isMissing ? `${day.date} — no submissions recorded` : `${day.date} — ${day.count} submissions`;
-              return <button
-                key={`${day.date}-${weekIndex}-${dayIndex}`}
-                type="button"
-                className={heatClass}
-                title={cellTitle}
-                aria-label={cellTitle}
-              />;
-            }))}
-          </div>
-        </div>
-      </div>
-    </div>;
-  };
-
-  const showErrorState = !loading && !stats && error;
+function DeveloperStatsSection() {
+  const [reloadToken, setReloadToken] = useState(0);
+  const statsUrl = `${buildLeetCardUrl("stats")}&cache=0`;
+  const heatmapUrl = `${buildLeetCardUrl("heatmap")}&cache=0`;
+  const contestUrl = `${buildLeetCardUrl("contest")}&cache=0`;
 
   return <section id="developer-stats" className="developer-stats section-shell" aria-labelledby="developer-stats-title">
     <div className="stats-header">
@@ -258,49 +167,32 @@ function DeveloperStatsSection() {
         <a href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">View LeetCode Profile <span>↗</span></a>
       </div>
     </div>
-
-    {loading && !stats && <div className="stats-loading" aria-live="polite">
-      <div className="stats-skeleton main" />
-      <div className="stats-grid stats-grid-loading">
-        {[1, 2, 3, 4, 5, 6].map((key) => <div key={key} className="stats-skeleton card" />)}
-      </div>
-      <div className="stats-skeleton heatmap" />
-    </div>}
-
-    {showErrorState && <div className="stats-error-state" role="alert">
-      <p>{error}</p>
-      <div className="stats-error-actions">
-        <button type="button" className="button button-primary" onClick={() => setRetryKey((current) => current + 1)}>Retry</button>
-        <a className="button button-outline" href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">Open profile <span>↗</span></a>
-      </div>
-    </div>}
-
-    {stats && <>
-      <div className="stats-meta-row">
-        <span>Updated {formatDateTime(stats.lastUpdated)}</span>
-        {usingCachedData && <span className="stats-cache-indicator">Cached snapshot</span>}
-      </div>
-
-      <div className="stats-grid">
-        <MetricCard label="Total Problems Solved" value={stats.totalSolved !== null ? formatNumber(stats.totalSolved) : "—"} highlight note="All difficulty" />
-        <MetricCard label="Easy" value={stats.easySolved !== null ? formatNumber(stats.easySolved) : "—"} />
-        <MetricCard label="Medium" value={stats.mediumSolved !== null ? formatNumber(stats.mediumSolved) : "—"} />
-        <MetricCard label="Hard" value={stats.hardSolved !== null ? formatNumber(stats.hardSolved) : "—"} />
-        {stats.contestRating !== null && <MetricCard label="Contest Rating" value={Number(stats.contestRating).toLocaleString(undefined, { maximumFractionDigits: 2 })} />}
-        {stats.globalRanking !== null && <MetricCard label="Global Contest Ranking" value={stats.globalRanking ? `#${formatNumber(stats.globalRanking)}` : "—"} muted />}
-      </div>
-
-      {stats.submissionCalendar?.days?.length ? <div className="stats-heatmap-wrap">
-        <div className="stats-heatmap-header">
-          <div>
-            <p className="stats-tagline">Submission heatmap</p>
-            <h3>Last 365 days</h3>
-          </div>
-          <span>{heatmapDays.filter((day) => day.count > 0).length} active days</span>
+  
+    <div className="stats-grid stats-grid-image">
+      {/* <div className="stats-image-card">
+        <div className="stats-image-header">
+          <span className="stats-tagline">Problem summary</span>
         </div>
-        {renderHeatmap()}
-      </div> : <div className="stats-empty-state"><p>Submission activity is unavailable for this profile right now.</p><a href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">Open profile ↗</a></div>}
-    </>}
+        <LeetCodeCard src={statsUrl} alt="LeetCode statistics summary for Vishal0528" title="Problem summary" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
+      </div> */}
+      <div className="stats-image-card">
+        <div className="stats-image-header">
+          <span className="stats-tagline">Contest rating</span>
+        </div>
+        <LeetCodeCard src={contestUrl} alt="LeetCode contest summary for Vishal0528" title="Contest rating" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
+      </div>
+    </div>
+
+    <div className="stats-heatmap-wrap">
+      <div className="stats-heatmap-header">
+        <div>
+          <p className="stats-tagline">Submission heatmap</p>
+          <h3>Last 52 weeks</h3>
+        </div>
+        <a href={LEETCODE_PROFILE_URL} target="_blank" rel="noreferrer">Open profile ↗</a>
+      </div>
+      <LeetCodeCard src={heatmapUrl} alt="LeetCode activity heatmap for Vishal0528" title="Submission heatmap" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
+    </div>
   </section>;
 }
 
