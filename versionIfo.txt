@@ -3,3 +3,5 @@ V1.1    = Migrated entire codebase to React
 V1.2    = Made it more portfolio focused
 V1.2.1  = Added scrolling Floating stack
 V1.3    = Added Detailed Project Page
+V1.3.1  = Fixed Routing issue
+V1.4    = Added Leetcode stats section
