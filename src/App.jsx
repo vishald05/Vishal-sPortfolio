@@ -17,6 +17,7 @@ import {
 } from "react-icons/si";
 import LogoLoop from "./components/LogoLoop";
 import CaseStudyPage from "./components/CaseStudyPage";
+import LivingConstellation from "./components/LivingConstellation";
 import {
   LEETCODE_PROFILE_URL,
   LEETCODE_USERNAME,
@@ -69,15 +70,10 @@ function Header({ menuOpen, setMenuOpen }) {
 }
 
 function HeroArt() {
-  return <div className="hero-art" aria-label="A pale lavender night sky illustration" role="img">
-    <div className="moon" /><span className="star star-one">✦</span><span className="star star-two">✦</span>
-    <span className="star star-three">·</span><span className="star star-four">✦</span>
-    <div className="cloud cloud-back" /><div className="cloud cloud-front" />
-    <div className="hill hill-back" /><div className="hill hill-front" />
-    <div className="wisteria wisteria-left"><i /><i /><i /><i /></div>
-    <div className="wisteria wisteria-right"><i /><i /><i /></div>
+  return <>
+    <LivingConstellation />
     <p className="art-caption">a quiet corner<br />of the internet</p>
-  </div>;
+  </>;
 }
 
 function ProjectCard({ project }) {
@@ -119,7 +115,7 @@ function MetricCard({ label, value, highlight = false, muted = false, note = nul
   </div>;
 }
 
-function LeetCodeCard({ src, alt, title, onRetry, reloadKey }) {
+function LeetCodeCard({ src, alt, title, onRetry, reloadKey, className = "" }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -136,7 +132,7 @@ function LeetCodeCard({ src, alt, title, onRetry, reloadKey }) {
     </div>;
   }
 
-  return <div className="stats-card-frame">
+  return <div className={`stats-card-frame ${className}`}>
     {loading && <div className="stats-skeleton heatmap" aria-hidden="true" />}
     <img
       key={reloadKey}
@@ -188,19 +184,20 @@ function DeveloperStatsSection() {
       </div>
       <LeetCodeCard src={heatmapUrl} alt="LeetCode activity heatmap for Vishal0528" title="Submission heatmap" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
     </div>
-      <div className="stats-image-card">
+      <div className="stats-image-card stats-contest-card">
         <div className="stats-image-header">
           <span className="stats-tagline">Contest rating</span>
         </div>
-        <LeetCodeCard src={contestUrl} alt="LeetCode contest summary for Vishal0528" title="Contest rating" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
+        <LeetCodeCard className="stats-contest-frame" src={contestUrl} alt="LeetCode contest summary for Vishal0528" title="Contest rating" reloadKey={reloadToken} onRetry={() => setReloadToken((current) => current + 1)} />
       </div>
   </section>;
 }
 
 function PortfolioPage() {
   return <main id="top">
-    <section className="hero section-shell" aria-labelledby="hero-title">
-      <div className="hero-copy">
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-inner section-shell">
+        <div className="hero-copy">
         <p className="eyebrow">Personal portfolio · 2026</p>
         <h1 id="hero-title">Hi, I'm <em>Vishal D.</em></h1>
         <p className="hero-role">Computer Science Student <span>·</span> Software Developer</p>
@@ -211,6 +208,7 @@ function PortfolioPage() {
           <span className="resume-note">Resume not available yet</span>
         </div>
         <div className="hero-meta"><span>Chennai, India</span><span className="meta-rule" /><span>CS undergrad · 2023—27</span></div>
+        </div>
       </div>
       <HeroArt />
     </section>
