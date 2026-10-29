@@ -173,4 +173,49 @@ export const projects = [
       },
     ],
   },
+  {
+    slug: "blindchess",
+    title: "BlindChess",
+    category: "strategy game",
+    cardCategory: "05 / strategy",
+    className: "visual-blindchess",
+    description: "A privacy-aware chess game where hidden information changes what each player can see, not how chess works.",
+    tags: ["React", "TypeScript", "chess.js", "Socket.IO"],
+    demo: "https://example.com/blindchess",
+    visual: "blindchess",
+    subtitle: "A standard chess engine wrapped in three carefully filtered visibility modes.",
+    stackGroups: [
+      { label: "Client", items: ["React", "TypeScript", "Vite"] },
+      { label: "Game and realtime", items: ["chess.js", "Socket.IO", "Express"] },
+      { label: "Quality", items: ["Shared TypeScript types", "Integration tests", "Web Audio API"] },
+    ],
+    sections: [
+      {
+        label: "Overview",
+        title: "Chess where seeing less is part of the strategy.",
+        body: "BlindChess is a playable chess application with Normal, Semi-Blind, and Blind-Pro visibility modes. Players can pass one device between turns or meet online through a shareable room code.",
+      },
+      {
+        label: "The problem",
+        title: "Create uncertainty without changing the rules.",
+        body: "Hidden-information chess must remain real chess: legal movement, check, promotion, castling, en passant, and draw rules still come from one canonical position. The challenge is to filter what each player sees without weakening server-side validation.",
+      },
+      {
+        label: "Architecture",
+        title: "One authoritative position, several authorized views.",
+        body: "A shared TypeScript package owns visibility filtering, terminal-state derivation, board perspective, and legal destinations. The client handles setup, board interaction, privacy handoff, and feedback, while the Express and Socket.IO server owns rooms, moves, reconnect tokens, and filtered online snapshots.",
+        bullets: [
+          "Normal shows the complete board; Semi-Blind masks opponent identities; Blind-Pro omits opponent pieces.",
+          "Online rooms assign White and Black deterministically and use five-character room codes.",
+          "Reconnect tokens restore a disconnected seat without allowing another client to claim it.",
+          "Blind-Pro normalizes move indicators so capture occupancy is not revealed.",
+        ],
+      },
+      {
+        label: "Key features",
+        title: "The interface makes game state understandable.",
+        body: "Legal move indicators, player-perspective orientation, promotion choices, check and checkmate highlights, draw announcements, reconnect status, and optional Web Audio feedback make the unusual ruleset readable on desktop and mobile.",
+      },
+    ],
+  },
 ];

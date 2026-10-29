@@ -8,3 +8,4 @@ V1.4    = Added Leetcode stats section
 V1.4.X  = Updated Leetcode stats section
 V1.5    = Added Touch to hero Section
 V1.5.1  = Updates hero Section
+V1.5.2  = Updates Proj Section

@@ -54,7 +54,8 @@ function CaseStudyPage({ project, onBack }) {
         {project.visual === "wordtrap" && <div className="wordtrap-screen"><span>WHO'S</span><strong>LYING?</strong><small>waiting for players...</small></div>}
         {project.visual === "budget" && <><div className="budget-chart"><span /><span /><span /><span /><span /></div><b>₹ 24,850</b><small>this month's overview</small></>}
         {project.visual === "match" && <div className="emoji-grid"><i>✦</i><i>☾</i><i>✿</i><i>☾</i><i>✦</i><i>✿</i></div>}
-        {project.visual === "tree" && <><div className="data-lines"><span /><span /><span /><span /></div><div className="data-pie" /></>}
+        {project.visual === "tree" && <div className="tree-visual" aria-hidden="true"><span className="tree-node tree-root" /><span className="tree-node tree-left" /><span className="tree-node tree-right" /><span className="tree-node tree-leaf-one" /><span className="tree-node tree-leaf-two" /><span className="tree-node tree-leaf-three" /></div>}
+        {project.visual === "blindchess" && <div className="blind-board" aria-hidden="true">{Array.from({ length: 16 }, (_, index) => <span key={index} />)}<b>♞</b><i>?</i></div>}
       </section>
 
       <section className="case-stack" aria-labelledby="stack-title">
