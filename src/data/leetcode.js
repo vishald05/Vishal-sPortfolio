@@ -1,12 +1,13 @@
 export const LEETCODE_USERNAME = "Vishal0528";
 export const LEETCODE_PROFILE_URL = `https://leetcode.com/u/${LEETCODE_USERNAME}/`;
 export const LEETCARD_COLORS = "F7F4FA,F0EBF6,49365E,766A83,8B78B8,C9B9DF,E9E1F2,FFFFFF";
+export const LEETCARD_HEATMAP_COLORS = "F0EBF6,D5C2E8,B99AD5,9870BD,76509F,49365E,766A83,FFFFFF";
 
 const LEETCARD_BASE_URL = "https://leetcard.jacoblin.cool";
 
 export function buildLeetCardUrl(type = "stats") {
   const params = new URLSearchParams({
-    colors: LEETCARD_COLORS,
+    colors: type === "heatmap" ? LEETCARD_HEATMAP_COLORS : LEETCARD_COLORS,
     hide_border: "true",
     border: "0",
     radius: "18",

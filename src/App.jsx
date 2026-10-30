@@ -156,7 +156,7 @@ function DeveloperStatsSection() {
     <div className="stats-header">
       <div>
         <p className="eyebrow">LeetCode profile</p>
-        <h2 id="developer-stats-title">Developer Stats</h2>
+        <h2 id="developer-stats-title">Problem Solving Stats</h2>
         <p className="stats-subtitle">Live, not fake. A snapshot of my problem-solving journey on LeetCode.</p>
       </div>
       <div className="stats-header-actions">
@@ -235,6 +235,18 @@ function PortfolioPage() {
     <section id="skills" className="toolkit section-band" aria-labelledby="skills-title"><div className="section-shell toolkit-inner"><div className="section-heading"><p className="eyebrow">The toolkit <span className="heading-line" /></p><h2 id="skills-title">Curious by default,<br /><em>specific when it matters.</em></h2></div><div className="skill-list">
       <div><span>01</span><b>Languages</b><p>Java · Python · JavaScript · SQL · HTML · CSS</p></div><div><span>02</span><b>Build with</b><p>React · Node.js · Express · Socket.IO · REST APIs</p></div><div><span>03</span><b>Data & AI</b><p>NumPy · Pandas · Matplotlib · Power BI · LLMs</p></div><div><span>04</span><b>Foundations</b><p>DSA · OOP · OS · Networks · DBMS · Cloud</p></div>
     </div><div className="skills-loop"><LogoLoop logos={technologyLogos} speed={52} direction="left" gap={28} pauseOnHover fadeOut={false} scaleOnHover ariaLabel="Technologies I use" /></div></div></section>
+
+    <section className="experiments section-shell" aria-labelledby="experiments-title">
+      <div className="experiments-card">
+        <div className="experiments-mark" aria-hidden="true"><span>✦</span><i /><i /><i /></div>
+        <div className="experiments-copy">
+          <p className="eyebrow">A corner of the journey</p>
+          <h2 id="experiments-title">Experiments &amp; Little Things</h2>
+          <p>A collection of little experiments, interactive mini-games, and random ideas I built while learning web development. They're a little rough around the edges, but each one was part of the journey — and some are still pretty fun to play with.</p>
+          <a className="text-link" href="https://littlethings-l8qz.onrender.com/" target="_blank" rel="noreferrer">Explore the little things <span>↗</span></a>
+        </div>
+      </div>
+    </section>
 
     <section className="contact"><div className="section-shell contact-inner"><p className="eyebrow">Have a good problem?</p><h2>Let's make it<br /><em>less hypothetical.</em></h2><a className="button button-light" href={`mailto:${email}`}>Email me at <strong>{email}</strong> <span>↗</span></a></div></section>
   </main>;
